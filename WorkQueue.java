@@ -11,6 +11,8 @@ class WorkQueue {
     public int val;
   }
 
+  public final static boolean RUNNING_MY_CODE = true;
+
   private static LimitedQueue queue = new LimitedQueue();
   private static Counter counter = new Counter(); // counts tasks as they are taken by consumers
 
@@ -18,38 +20,43 @@ class WorkQueue {
     int num_producers = -1;
     int num_consumers = -1;
     
-    // Validate input
+    // Validate 2 arguments in input
     if (args.length != 2) {
-      System.err.println("Usage: java WorkQueue <#producers> <#consumers>");
-      System.exit(1);
+      printUsageAndExit();
     } 
 
     // Check that arguments are integers
     try {
       num_producers = Integer.parseInt(args[0] + "");
       num_consumers = Integer.parseInt(args[1] + "");
-      System.out.println("args[0]: " + args[0] + ", args[1]: " + args[1]);
+      //System.out.println("args[0]: " + args[0] + ", args[1]: " + args[1]);
     } catch (NumberFormatException e) {
-      System.err.println("Usage: java WorkQueue <#producers> <#consumers>");
-      System.exit(1);
+      printUsageAndExit();
     }
 
     // testing only
     /*System.out.println("Number of producers = " + num_producers);
     System.out.println("Number of consumers = " + num_consumers);*/
-    
-    counter.val = 0;
+    if (RUNNING_MY_CODE) {
 
-    Consumer consumer = new Consumer(queue, counter);
-    Producer producer = new Producer(queue, counter);
+    } else {
+      counter.val = 0;
 
-    while (!producer.isDone || !queue.isEmpty()) {
-      producer.run();
-      consumer.run();
+      Consumer consumer = new Consumer(queue, counter);
+      Producer producer = new Producer(queue, counter);
+
+      while (!producer.isDone || !queue.isEmpty()) {
+        producer.run();
+        consumer.run();
+      }
+
+      System.out.println("" + counter.val + " Jobs Done");
     }
+  }
 
-    System.out.println("" + counter.val + " Jobs Done");
-
+  private static void printUsageAndExit() {
+    System.err.println("Usage: java WorkQueue <#producers> <#consumers>");
+    System.exit(1);
   }
 
 }

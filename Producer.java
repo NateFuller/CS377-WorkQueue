@@ -34,7 +34,10 @@ public class Producer implements Runnable {
     
       int input = 0; // initialized to zero to satisfy overzealous compiler
       try {
-        input = in.read(); // actually gets set to character value from read()
+        //System.out.println("Counter: " + counter.val);
+        for (int i = 0; i <= counter.val; i++) // 
+          input = in.read(); // actually gets set to character value from read()
+        //System.out.println("Producer " + Thread.currentThread().getId() + " processing character: " + input);
       } catch (IOException e) {
         System.err.println(e.getLocalizedMessage());
         System.exit(1);
@@ -49,8 +52,9 @@ public class Producer implements Runnable {
           Thread.sleep(6000); // if a sleep character is found, producer sleeps for 6 seconds
         } catch (InterruptedException e) {}
       } 
-      else 
+      else {
         queue.enqueue((char)input);
+      }
     }
   }
 
