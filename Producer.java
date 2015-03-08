@@ -28,9 +28,6 @@ public class Producer implements Runnable {
   /* Fills the queue with input from the work file.
    * Sets isDone if the file is empty. */
     while (true) {
-
-      if (queue.isFull())
-        return;
     
       int input = 0; // initialized to zero to satisfy overzealous compiler
       try {

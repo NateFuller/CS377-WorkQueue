@@ -5,6 +5,7 @@ class LimitedQueue {
   int head = 0; // pointer to the front of the queue
   int size = 0; // current usage
   char[] elements = new char[queue_cap]; // container for elements
+  boolean shouldTerminate = false;
 
   private final Lock lock = new ReentrantLock();
   private final Condition full = lock.newCondition();
@@ -56,13 +57,15 @@ class LimitedQueue {
       while (isEmpty()) {
         try {
           empty.await();
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+          System.out.println("Dequeue thread interrupted!");
+        }
       }
 
       // "remove" the element
       to_return = elements[(head+size)%queue_cap]; 
       size--;
-
+      
       // signal to a waiting producer that there is space for production
       full.signal();
     } finally {

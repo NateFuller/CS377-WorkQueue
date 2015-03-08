@@ -4,36 +4,37 @@ public class Consumer implements Runnable {
   
   private LimitedQueue queue;
   private WorkQueue.Counter counter;
+  private boolean shouldTerminate;
 
-  private final Lock lock;
+  private static final Lock lock = new ReentrantLock();
 
   Consumer(LimitedQueue queue, WorkQueue.Counter counter) {
     this.queue = queue;
-    this.counter = counter; 
-    this.lock = new ReentrantLock();
+    this.counter = counter;
+    this.shouldTerminate = false;
   }
 
   public void run() {
-    Character assignment = queue.dequeue();
-    if (assignment == null)
-      return;
+    while (true) {
+      Character assignment = queue.dequeue();
 
-    lock.lock(); // lock before incrementing counter to avoid interleaving between consumers
-    try {
-      counter.val++;
-    } finally {
-      lock.unlock();
-    }
+      lock.lock(); // lock before incrementing counter to avoid interleaving between consumers
+      try {
+        counter.val++;
+      } finally {
+        lock.unlock();
+      }
 
-    switch(assignment) {
-      case 'a': doJobA(counter.val);
-        return;
-      case 'b': doJobB(counter.val);
-        return;
-      case 'c': doJobC(counter.val);
-        return;
-      default: System.out.println("Invalid Work: " + assignment);
-        return;
+      switch(assignment) {
+        case 'a': doJobA(counter.val);
+          break;
+        case 'b': doJobB(counter.val);
+          break;
+        case 'c': doJobC(counter.val);
+          break;
+        default: System.out.println("Invalid Work: " + assignment);
+          return;
+      }
     }
   }
 
