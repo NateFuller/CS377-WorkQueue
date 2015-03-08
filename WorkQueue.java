@@ -39,6 +39,7 @@ class WorkQueue {
     System.out.println("Number of consumers = " + num_consumers);*/
     if (RUNNING_MY_CODE) {
 
+
     } else {
       counter.val = 0;
 

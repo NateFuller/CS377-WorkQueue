@@ -35,9 +35,9 @@ public class Producer implements Runnable {
       int input = 0; // initialized to zero to satisfy overzealous compiler
       try {
         //System.out.println("Counter: " + counter.val);
-        for (int i = 0; i <= counter.val; i++) // 
+        //for (int i = 0; i <= counter.val; i++) // 
           input = in.read(); // actually gets set to character value from read()
-        //System.out.println("Producer " + Thread.currentThread().getId() + " processing character: " + input);
+        //System.out.println("Producer " + Thread.currentThread().getId() + " processing character: " + (char)input);
       } catch (IOException e) {
         System.err.println(e.getLocalizedMessage());
         System.exit(1);
