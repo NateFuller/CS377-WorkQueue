@@ -1,18 +1,30 @@
+import java.util.concurrent.locks.*;
+
 public class Consumer implements Runnable {
   
   private LimitedQueue queue;
   private WorkQueue.Counter counter;
 
+  private final Lock lock;
+
   Consumer(LimitedQueue queue, WorkQueue.Counter counter) {
     this.queue = queue;
     this.counter = counter; 
+    this.lock = new ReentrantLock();
   }
 
   public void run() {
     Character assignment = queue.dequeue();
     if (assignment == null)
       return;
-    counter.val++;
+
+    lock.lock(); // lock before incrementing counter to avoid interleaving between consumers
+    try {
+      counter.val++;
+    } finally {
+      lock.unlock();
+    }
+
     switch(assignment) {
       case 'a': doJobA(counter.val);
         return;

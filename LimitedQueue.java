@@ -1,3 +1,5 @@
+import java.util.concurrent.locks.*;
+
 class LimitedQueue {
   static int queue_cap = 10; // queue capacity
   int head = 0; // pointer to the front of the queue

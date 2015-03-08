@@ -11,7 +11,7 @@ class WorkQueue {
     public int val;
   }
 
-  public final static boolean RUNNING_MY_CODE = true;
+  public final static boolean RUNNING_MY_CODE = false;
 
   private static LimitedQueue queue = new LimitedQueue();
   private static Counter counter = new Counter(); // counts tasks as they are taken by consumers
