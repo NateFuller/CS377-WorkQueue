@@ -4,19 +4,27 @@ public class Consumer implements Runnable {
   
   private LimitedQueue queue;
   private WorkQueue.Counter counter;
-  private boolean shouldTerminate;
 
   private static final Lock lock = new ReentrantLock();
 
   Consumer(LimitedQueue queue, WorkQueue.Counter counter) {
     this.queue = queue;
     this.counter = counter;
-    this.shouldTerminate = false;
   }
 
   public void run() {
     while (true) {
-      Character assignment = queue.dequeue();
+      Character assignment;
+      try {
+        assignment = queue.dequeue();
+      } catch (InterruptedException e) {
+        System.out.println ("Consumer thread interrupted!");
+        return;
+      }
+
+      if (assignment == null) {
+        return;
+      }
 
       lock.lock(); // lock before incrementing counter to avoid interleaving between consumers
       try {
@@ -26,13 +34,17 @@ public class Consumer implements Runnable {
       }
 
       switch(assignment) {
-        case 'a': doJobA(counter.val);
+        case 'a': 
+          doJobA(counter.val);
           break;
-        case 'b': doJobB(counter.val);
+        case 'b': 
+          doJobB(counter.val);
           break;
-        case 'c': doJobC(counter.val);
+        case 'c': 
+          doJobC(counter.val);
           break;
-        default: System.out.println("Invalid Work: " + assignment);
+        default: 
+          System.out.println("Invalid Work: " + assignment);
           return;
       }
     }
@@ -49,6 +61,7 @@ public class Consumer implements Runnable {
     try {
       Thread.sleep(500);
     } catch (InterruptedException e) {}
+
     System.out.println("Thread " + Thread.currentThread().getId() + " Ending Job B (#" + counter + ")");
   }
 
@@ -59,7 +72,6 @@ public class Consumer implements Runnable {
       Thread.sleep(2500);
     } catch (InterruptedException e) {}
     System.out.println("Thread " + Thread.currentThread().getId() + " Ending Job C (#" + counter + ")");
-
   }
 
 }

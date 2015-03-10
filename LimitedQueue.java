@@ -5,11 +5,11 @@ class LimitedQueue {
   int head = 0; // pointer to the front of the queue
   int size = 0; // current usage
   char[] elements = new char[queue_cap]; // container for elements
-  boolean shouldTerminate = false;
+  public boolean shouldTerminate = false;
 
   private final Lock lock = new ReentrantLock();
   private final Condition full = lock.newCondition();
-  private final Condition empty = lock.newCondition();
+  public final Condition empty = lock.newCondition();
 
   public void debug() {
     System.out.print ("head= " + head + " size= " + size);
@@ -32,7 +32,7 @@ class LimitedQueue {
           full.await();
         } catch (InterruptedException e) {}
       }
-
+      //System.out.println("Thread " + Thread.currentThread().getId() + " enqueuing " + elem);
       // insert the element
       elements[head] = elem;
       head = head == 0 ? queue_cap-1 : head-1;
@@ -40,39 +40,39 @@ class LimitedQueue {
 
       // signal to a waiting consumer that there is something to be consumed
       empty.signal();
+      return true;
     } finally {
       // release lock
       lock.unlock();
     }
-    return true;
   }
 
-  public Character dequeue() {
+  public Character dequeue() throws InterruptedException{
     // acquire lock
     lock.lock();
     char to_return;
     
     try {
       // if the buffer is empty, wait for a signal from a producer
-      while (isEmpty()) {
-        try {
+      while (isEmpty() && !shouldTerminate) {
           empty.await();
-        } catch (InterruptedException e) {
-          System.out.println("Dequeue thread interrupted!");
-        }
       }
 
-      // "remove" the element
-      to_return = elements[(head+size)%queue_cap]; 
-      size--;
-      
-      // signal to a waiting producer that there is space for production
-      full.signal();
+      if (shouldTerminate) {
+            return null;
+      } else {
+        // "remove" the element
+        to_return = elements[(head+size)%queue_cap]; 
+        size--;
+        
+        // signal to a waiting producer that there is space for production
+        full.signal();
+        return to_return;
+      }
     } finally {
       // release lock
       lock.unlock();
     }
-    return to_return;
   }
 
   public boolean isFull() {

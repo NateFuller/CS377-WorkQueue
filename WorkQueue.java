@@ -76,22 +76,28 @@ class WorkQueue {
           pt.join();
         } catch (InterruptedException e) {};
       }
+      // at this point, all producer threads should be finished
+      // and therefore nothing else should get enqueued
 
-      boolean producers_done = true;
-      for (Producer p : producers) {
-        if (!p.isDone)
-          producers_done = false;
+      // wait for queue to be emptied by consumers
+      while (!queue.isEmpty()) {
       }
 
-      System.out.println("Producers done? -- " + producers_done);
+      queue.shouldTerminate = true;
 
+      // signal all consumers waiting due to the empty queue
+      try {
+        queue.empty.signalAll();
+      } catch (IllegalMonitorStateException e) { /* this is expected */ }
+
+      // wait for the consumer_threads to return and join them
       for (Thread ct : consumer_threads) {
         try {
           ct.join();
         } catch (InterruptedException e) {};
       }
 
-      System.out.println("\n Main thread terminating!");
+      System.out.println("\nMain thread terminating!");
 
     } else {
       counter.val = 0;
