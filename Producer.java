@@ -36,7 +36,6 @@ public class Producer implements Runnable {
       int input = 0; // initialized to zero to satisfy overzealous compiler
       try {
         //System.out.println("Counter: " + counter.val);
-        //for (int i = 0; i <= counter.val; i++) //
           lock.lock();
           try {
             input = in.read(); // actually gets set to character value from read()

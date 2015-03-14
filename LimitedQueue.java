@@ -58,6 +58,11 @@ class LimitedQueue {
           empty.await();
       }
 
+      // when LimitedQueue finds out that the queue is empty,
+      // it will shouldTerminate to true and signal all consumers
+      // to wake up. They'll break out of the loop above and
+      // return null in the if statment below, which will terminate
+      // them in Consumer.java
       if (shouldTerminate) {
             return null;
       } else {

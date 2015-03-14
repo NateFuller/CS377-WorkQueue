@@ -1,0 +1,83 @@
+FAILED output for 'work':
+
+$ java WorkQueue 1 1
+Thread 9 Starting Job A (#1)
+Thread 9 Ending Job A (#1)
+Thread 9 Starting Job B (#2)
+Thread 9 Ending Job B (#2)
+Thread 9 Starting Job C (#3)
+Thread 9 Ending Job C (#3)
+Thread 9 Starting Job A (#4)
+Thread 9 Ending Job A (#4)
+Thread 9 Starting Job B (#5)
+Thread 9 Ending Job B (#5)
+Thread 9 Starting Job C (#6)
+Thread 9 Ending Job C (#6) 
+^C$
+
+// hangs after completing Job C, so had to terminate using ^C
+
+=================================================
+=================================================
+SUCCESSFUL output for 'work':
+
+$ java WorkQueue 6 5
+Thread 9 Starting Job A (#1)
+Thread 10 Starting Job B (#2)
+Thread 12 Starting Job C (#3)
+Thread 11 Starting Job B (#5)
+Thread 13 Starting Job A (#4)
+Thread 13 Ending Job A (#4)
+Thread 13 Starting Job C (#6)
+Thread 9 Ending Job A (#1)
+Thread 11 Ending Job B (#5)
+Thread 10 Ending Job B (#2)
+Thread 12 Ending Job C (#3)
+Thread 13 Ending Job C (#6)
+
+Main thread terminating!
+$
+
+=================================================
+=================================================
+
+FAILED output for 'work-short':
+
+$ java WorkQueue 3 5
+Thread 10 Starting Job B (#2)
+Thread 9 Starting Job A (#1)
+Thread 11 Starting Job C (#3)
+Thread 12 Starting Job A (#4)
+Thread 13 Starting Job C (#5)
+Thread 12 Ending Job A (#4)
+Thread 9 Ending Job A (#1)
+Thread 12 Starting Job C (#6)
+Thread 9 Starting Job A (#7)
+Thread 9 Ending Job A (#7)
+Thread 9 Starting Job B (#8)
+Thread 10 Ending Job B (#2)
+Thread 10 Starting Job B (#9)
+Thread 9 Ending Job B (#8)
+Thread 9 Starting Job A (#10)
+Thread 9 Ending Job A (#10)
+Thread 9 Starting Job A (#11)
+Thread 9 Ending Job A (#11)
+Thread 9 Starting Job B (#12)
+Thread 10 Ending Job B (#9)
+Thread 9 Ending Job B (#12)
+Thread 10 Starting Job C (#13)
+Thread 9 Starting Job A (#14)
+Thread 9 Ending Job A (#14)
+Thread 9 Starting Job B (#15)
+Thread 9 Ending Job B (#15)
+Thread 9 Starting Job C (#16)
+Thread 11 Ending Job C (#3)
+Thread 12 Ending Job C (#6)
+Thread 11 Starting Job C (#17)
+Thread 13 Ending Job C (#5)
+Thread 12 Starting Job A (#18)
+Thread 12 Ending Job A (#18)
+Thread 10 Ending Job C (#13)
+Thread 9 Ending Job C (#16)
+Thread 11 Ending Job C (#17)
+^C$

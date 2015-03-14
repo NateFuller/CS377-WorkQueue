@@ -61,7 +61,6 @@ public class Consumer implements Runnable {
     try {
       Thread.sleep(500);
     } catch (InterruptedException e) {}
-
     System.out.println("Thread " + Thread.currentThread().getId() + " Ending Job B (#" + counter + ")");
   }
 
